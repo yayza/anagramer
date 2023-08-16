@@ -3,19 +3,21 @@
     import { words } from "$lib/data/words";
     import { customWords } from "$lib/data/customWords";
     import { Label, Input, Textarea, ButtonGroup, Button } from "flowbite-svelte";
+    import toast, { Toaster } from "svelte-french-toast";
 
     let textareaprops = {
         id: "custom-words",
         name: "custom-words",
-        label: "Your message",
+        label: "",
         rows: 10,
         columns: 30,
-        placeholder: "Add your own custom words, one per line",
+        placeholder: "Add your own custom words, one per line.",
     };
 
     let phrase = "";
 
     let customWordsInput = ``;
+
     customWords.subscribe((value) => {
         customWordsInput = value.join("\n");
     });
@@ -24,6 +26,16 @@
         let parsedPhrase = phrase.trim().toLowerCase();
         let combinedWords = words.concat(customWordsInput.split("\n"));
         actualWords = findAnagrams(parsedPhrase, combinedWords);
+        checkSuccess();
+    };
+
+    const checkSuccess = () => {
+        if (!phrase) return;
+        if (actualWords.length) {
+            toast.success("Anagrams found!", { duration: 1000 });
+        } else {
+            toast.error("No anagrams found.", { duration: 1000 });
+        }
     };
 
     const removeNonAlphanumeric = (str: string) => str.replace(/[^A-Za-z0-9 ]/g, "");
@@ -34,7 +46,9 @@
     checkAnagrams();
 </script>
 
-<div class="flex flex-col gap-4">
+<Toaster />
+<div class="flex flex-col gap-4 py-6">
+    <span class="text-2xl text-center">Anagram checker</span>
     <Input type="text" bind:value={phrase} placeholder="Enter a phrase" size="lg" class="!text-2xl" />
 
     {actualWords.join(", ")}
