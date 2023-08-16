@@ -41,7 +41,7 @@
 
     <Textarea {...textareaprops} bind:value={customWordsInput} class="!text-2xl" />
     <div class="flex flex-col gap-4">
-        <div class="formatting">
+        <div class="flex">
             <ButtonGroup>
                 <Button on:click={() => (customWordsInput = removeNonAlphanumeric(customWordsInput))}>
                     Remove non-alphanumeric
@@ -51,12 +51,12 @@
                 </Button>
             </ButtonGroup>
         </div>
-        <div class="bg-red-400 actions">
-            <ButtonGroup>
+        <div class="flex !w-full justify-end">
+            <ButtonGroup class="items-stretch">
                 <Button color="blue" on:click={() => customWords.set(customWordsInput.split("\n"))}>
                     Save Custom Dictionary
                 </Button>
-                <Button color="green" on:click={checkAnagrams}>Check Anagrams</Button>
+                <Button class="flex-0" color="green" on:click={checkAnagrams}>Check Anagrams</Button>
             </ButtonGroup>
         </div>
     </div>
