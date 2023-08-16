@@ -2,8 +2,9 @@
     import { findAnagrams } from "$lib/utils/anagram";
     import { words } from "$lib/data/words";
     import { customWords } from "$lib/data/customWords";
-    import { Label, Input, Textarea, ButtonGroup, Button } from "flowbite-svelte";
+    import { Input, Textarea, ButtonGroup, Button } from "flowbite-svelte";
     import toast, { Toaster } from "svelte-french-toast";
+    // import hmmm from "../../static/hmmm.png";
 
     let textareaprops = {
         id: "custom-words",
@@ -75,7 +76,9 @@
         </div>
     </div>
 </div>
-
+<div class="absolute bottom-0 right-0 max-w-[2rem]">
+    <img src="hmmm.png" alt="" />
+</div>
 <!-- <style>
     .container {
         display: flex;
