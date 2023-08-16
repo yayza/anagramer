@@ -17,7 +17,7 @@
 
     let customWordsInput = ``;
     customWords.subscribe((value) => {
-        // customWordsInput = value.join("\n");
+        customWordsInput = value.join("\n");
     });
 
     const checkAnagrams = () => {
