@@ -5,9 +5,9 @@
 
     let phrase = "Diablo";
 
-    let customWordsInput = "";
+    let customWordsInput = ``;
     customWords.subscribe((value) => {
-        customWordsInput = value.join("\n");
+        // customWordsInput = value.join("\n");
     });
 
     const checkAnagrams = () => {
@@ -15,6 +15,10 @@
         let combinedWords = words.concat(customWordsInput.split("\n"));
         actualWords = findAnagrams(parsedPhrase, combinedWords);
     };
+
+    const removeNonAlphanumeric = (str: string) => str.replace(/[^A-Za-z0-9 ]/g, "");
+
+    const convertSpaceToNewline = (str: string) => str.replace(/ /g, "\n");
 
     let actualWords: string[] = [];
     checkAnagrams();
@@ -25,16 +29,16 @@
 
     {actualWords.join(", ")}
 
-    <textarea
-        bind:value={customWordsInput}
-        name="customw-words"
-        id=""
-        cols="30"
-        rows="10"
-        on:input={() => customWords.set(customWordsInput.split("\n"))}
-    />
+    <textarea bind:value={customWordsInput} name="custom-words" id="" cols="30" rows="10" />
 
-    <button on:click={checkAnagrams}>Check</button>
+    <div class="">
+        <button on:click={() => (customWordsInput = removeNonAlphanumeric(customWordsInput))}>Remove non alpha</button>
+        <button on:click={() => (customWordsInput = convertSpaceToNewline(customWordsInput))}>Space to newline</button>
+        <button on:input={() => customWords.set(customWordsInput.split("\n"))}>
+            <strong>Add Words To List</strong>
+        </button>
+        <button class="check" on:click={checkAnagrams}><strong>Check</strong></button>
+    </div>
 </div>
 
 <style>
@@ -42,6 +46,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         gap: 1rem;
     }
 </style>
