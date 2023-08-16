@@ -2,8 +2,18 @@
     import { findAnagrams } from "$lib/utils/anagram";
     import { words } from "$lib/data/words";
     import { customWords } from "$lib/data/customWords";
+    import { Label, Input, Textarea, ButtonGroup, Button } from "flowbite-svelte";
 
-    let phrase = "Diablo";
+    let textareaprops = {
+        id: "custom-words",
+        name: "custom-words",
+        label: "Your message",
+        rows: 10,
+        columns: 30,
+        placeholder: "Add your own custom words, one per line",
+    };
+
+    let phrase = "";
 
     let customWordsInput = ``;
     customWords.subscribe((value) => {
@@ -24,24 +34,35 @@
     checkAnagrams();
 </script>
 
-<div class="container">
-    <input type="text" bind:value={phrase} />
+<div class="flex flex-col gap-4">
+    <Input type="text" bind:value={phrase} placeholder="Enter a phrase" size="lg" class="!text-2xl" />
 
     {actualWords.join(", ")}
 
-    <textarea bind:value={customWordsInput} name="custom-words" id="" cols="30" rows="10" />
-
-    <div class="">
-        <button on:click={() => (customWordsInput = removeNonAlphanumeric(customWordsInput))}>Remove non alpha</button>
-        <button on:click={() => (customWordsInput = convertSpaceToNewline(customWordsInput))}>Space to newline</button>
-        <button on:input={() => customWords.set(customWordsInput.split("\n"))}>
-            <strong>Add Words To List</strong>
-        </button>
-        <button class="check" on:click={checkAnagrams}><strong>Check</strong></button>
+    <Textarea {...textareaprops} bind:value={customWordsInput} class="!text-2xl" />
+    <div class="flex flex-col gap-4">
+        <div class="formatting">
+            <ButtonGroup>
+                <Button on:click={() => (customWordsInput = removeNonAlphanumeric(customWordsInput))}>
+                    Remove non-alphanumeric
+                </Button>
+                <Button on:click={() => (customWordsInput = convertSpaceToNewline(customWordsInput))}>
+                    Space to newline
+                </Button>
+            </ButtonGroup>
+        </div>
+        <div class="bg-red-400 actions">
+            <ButtonGroup>
+                <Button color="blue" on:click={() => customWords.set(customWordsInput.split("\n"))}>
+                    Save Custom Dictionary
+                </Button>
+                <Button color="green" on:click={checkAnagrams}>Check Anagrams</Button>
+            </ButtonGroup>
+        </div>
     </div>
 </div>
 
-<style>
+<!-- <style>
     .container {
         display: flex;
         flex-direction: column;
@@ -49,4 +70,11 @@
         justify-content: center;
         gap: 1rem;
     }
-</style>
+    .buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+    }
+</style> -->
