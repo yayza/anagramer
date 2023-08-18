@@ -50,7 +50,6 @@
 
     const convertSpaceToNewline = (str: string) => str.replace(/ /g, "\n");
 
-    $: if (combinationsFound) console.log(combinationsFound);
     let files: FileList;
 
     $: if (files && files[0]) {
