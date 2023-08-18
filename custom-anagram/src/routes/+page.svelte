@@ -13,7 +13,7 @@
         label: "",
         rows: 10,
         columns: 30,
-        placeholder: "Add your own custom words, one per line.",
+        placeholder: `Add your own custom words, one per line. Make sure to click "Save Changes" afterward.`,
     };
 
     let phrase = "";
@@ -75,7 +75,7 @@
             <Fileupload bind:files />
         </div>
     </div>
-    <Textarea {...textAreaProps} bind:value={customWordsInput} class="!text-2xl" />
+    <Textarea {...textAreaProps} bind:value={customWordsInput} class="!text-xl" />
     <div class="flex flex-col flex-none gap-2">
         <div class="flex flex-col">
             <Label>Format helpers</Label>
@@ -97,7 +97,12 @@
         </div>
     </div>
     <div class="flex flex-col gap-2">
-        <Checkbox bind:checked={checkForCombinations} color="blue">Check For Combinations?</Checkbox>
+        <Checkbox bind:checked={checkForCombinations} color="blue">
+            <div class="flex flex-col">
+                <span class="text-sm">Include Combinations?</span>
+                <span class="text-xs text-red-600">Will be slower with longer phrases</span>
+            </div>
+        </Checkbox>
         <Button
             color="green"
             on:click={() => {
