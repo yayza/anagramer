@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { findAnagramPhrases } from "$lib/utils/anagram";
+    import { findCombinations } from "$lib/utils/findCombinations";
     import { customWords } from "$lib/data/customWords";
     import { Input, Textarea, ButtonGroup, Button, Label, Fileupload } from "flowbite-svelte";
     import toast, { Toaster } from "svelte-french-toast";
@@ -17,11 +17,11 @@
     };
 
     let phrase = "";
-    $: parsedPhrase = phrase.trim().toLowerCase();
+    $: parsedPhrase = phrase.toLowerCase().replaceAll(" ", "");
 
     let customWordsInput = ``;
     let wordsFound: string[] = [];
-    let phrasesFound: {
+    let combinationsFound: {
         words: string[];
         remaining: string[];
     }[] = [];
@@ -32,13 +32,13 @@
 
     const checkAnagramsPhrases = () => {
         wordsFound = wordTrie.getSubAnagrams(parsedPhrase);
-        phrasesFound = findAnagramPhrases(parsedPhrase.replaceAll(" ", ""), $customWords);
+        combinationsFound = findCombinations(parsedPhrase, wordsFound);
         checkSuccess();
     };
 
     const checkSuccess = () => {
-        if (!phrasesFound) return;
-        if (!phrasesFound.length) {
+        if (!combinationsFound) return;
+        if (!combinationsFound.length) {
             toast.error("No combinations found.", { duration: 1000 });
         }
     };
@@ -47,13 +47,16 @@
 
     const convertSpaceToNewline = (str: string) => str.replace(/ /g, "\n");
 
-    $: if (phrasesFound) console.log(phrasesFound);
-    let files;
+    $: if (combinationsFound) console.log(combinationsFound);
+    let files: FileList;
 
     $: if (files && files[0]) {
         const reader = new FileReader();
         reader.onload = (event) => {
+            if (!event.target) return;
             const content = event.target.result;
+
+            if (!content || typeof content !== "string") return;
             customWords.set(content.split("\n").filter((word) => word.trim().length > 1));
         };
         reader.readAsText(files[0]);
@@ -113,10 +116,10 @@
         </div>
 
         <div class="flex flex-wrap gap-4 p-4 rounded bg-slate-100">
-            {#if phrasesFound.filter((p) => !p.remaining.length).length}
-                <span>{phrasesFound.filter((p) => !p.remaining.length).length} Exact Combinations Found:</span>
+            {#if combinationsFound.filter((p) => p.remaining.length == 0).length}
+                <span>{combinationsFound.filter((p) => p.remaining.length == 0).length} Exact Combinations Found:</span>
                 <div class="flex flex-wrap gap-4">
-                    {#each phrasesFound.filter((p) => !p.remaining.length) as phrase, i}
+                    {#each combinationsFound.filter((p) => p.remaining.length == 0) as phrase, i}
                         <div class="flex gap-2 px-2 bg-gray-200 rounded">
                             {#each phrase.words as word}
                                 <span>{word}</span>
@@ -133,10 +136,12 @@
         </div>
 
         <div class="flex flex-wrap gap-4 p-4 rounded bg-slate-100">
-            {#if phrasesFound.filter((p) => p.remaining.length).length}
-                <span>{phrasesFound.filter((p) => p.remaining.length).length} Combinations with extra chars:</span>
+            {#if combinationsFound.filter((p) => p.remaining.length > 0).length}
+                <span>
+                    {combinationsFound.filter((p) => p.remaining.length > 0).length} Combinations with extra chars:
+                </span>
                 <div class="flex flex-wrap gap-4">
-                    {#each phrasesFound.filter((p) => p.remaining.length) as phrase, i}
+                    {#each combinationsFound.filter((p) => p.remaining.length > 0) as phrase, i}
                         <div class="flex gap-2 px-2 bg-gray-200 rounded">
                             {#each phrase.words as word}
                                 <span>{word}</span>
