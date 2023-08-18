@@ -7,7 +7,7 @@
 
     $: wordTrie = trie($customWords);
 
-    let textareaprops = {
+    let textAreaProps = {
         id: "custom-words",
         name: "custom-words",
         label: "",
@@ -20,19 +20,20 @@
     $: parsedPhrase = phrase.toLowerCase().replaceAll(" ", "");
 
     let customWordsInput = ``;
+
     let wordsFound: string[] = [];
+
+    let checkForCombinations = false;
     let combinationsFound: {
         words: string[];
         remaining: string[];
     }[] = [];
 
-    let checkForCombinations = false;
-
     customWords.subscribe((value) => {
         customWordsInput = value.join("\n");
     });
 
-    const checkAnagramsPhrases = () => {
+    const checkForAnagrams = () => {
         wordsFound = wordTrie.getSubAnagrams(parsedPhrase);
 
         if (checkForCombinations) combinationsFound = findCombinations(parsedPhrase, wordsFound);
@@ -51,7 +52,6 @@
     const convertSpaceToNewline = (str: string) => str.replace(/ /g, "\n");
 
     let files: FileList;
-
     $: if (files && files[0]) {
         const reader = new FileReader();
         reader.onload = (event) => {
@@ -75,8 +75,7 @@
             <Fileupload bind:files />
         </div>
     </div>
-    <!-- {actualWords.join(", ")} -->
-    <Textarea {...textareaprops} bind:value={customWordsInput} class="!text-2xl" />
+    <Textarea {...textAreaProps} bind:value={customWordsInput} class="!text-2xl" />
     <div class="flex flex-col flex-none gap-2">
         <div class="flex flex-col">
             <Label>Format helpers</Label>
@@ -102,7 +101,7 @@
         <Button
             color="green"
             on:click={() => {
-                checkAnagramsPhrases();
+                checkForAnagrams();
             }}
         >
             <span class="text-lg">Find Words</span>
