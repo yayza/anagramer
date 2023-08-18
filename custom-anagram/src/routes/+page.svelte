@@ -164,6 +164,6 @@
         </div>
     </div>
 </div>
-<div class="absolute bottom-0 right-0 max-w-[2rem]">
+<div class="fixed bottom-0 right-0 max-w-[2rem]">
     <img src="hmmm.png" alt="" />
 </div>
