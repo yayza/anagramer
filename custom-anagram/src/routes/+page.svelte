@@ -1,7 +1,7 @@
 <script lang="ts">
     import { findCombinations } from "$lib/utils/findCombinations";
     import { customWords } from "$lib/data/customWords";
-    import { Input, Textarea, ButtonGroup, Button, Label, Fileupload } from "flowbite-svelte";
+    import { Input, Textarea, ButtonGroup, Button, Label, Fileupload, Checkbox } from "flowbite-svelte";
     import toast, { Toaster } from "svelte-french-toast";
     import trie from "trie-prefix-tree";
 
@@ -26,19 +26,22 @@
         remaining: string[];
     }[] = [];
 
+    let checkForCombinations = false;
+
     customWords.subscribe((value) => {
         customWordsInput = value.join("\n");
     });
 
     const checkAnagramsPhrases = () => {
         wordsFound = wordTrie.getSubAnagrams(parsedPhrase);
-        combinationsFound = findCombinations(parsedPhrase, wordsFound);
+
+        if (checkForCombinations) combinationsFound = findCombinations(parsedPhrase, wordsFound);
+
         checkSuccess();
     };
 
     const checkSuccess = () => {
-        if (!combinationsFound) return;
-        if (!combinationsFound.length) {
+        if (checkForCombinations && !combinationsFound.length) {
             toast.error("No combinations found.", { duration: 1000 });
         }
     };
@@ -95,14 +98,17 @@
             </Button>
         </div>
     </div>
-    <Button
-        color="green"
-        on:click={() => {
-            checkAnagramsPhrases();
-        }}
-    >
-        <span class="text-lg">Check</span>
-    </Button>
+    <div class="flex flex-col gap-2">
+        <Checkbox bind:checked={checkForCombinations} color="blue">Check For Combinations?</Checkbox>
+        <Button
+            color="green"
+            on:click={() => {
+                checkAnagramsPhrases();
+            }}
+        >
+            <span class="text-lg">Find Words</span>
+        </Button>
+    </div>
     <div class="flex flex-col flex-shrink gap-4">
         <div class="flex flex-wrap gap-4 p-4 rounded bg-slate-100">
             {#if wordsFound.length}
