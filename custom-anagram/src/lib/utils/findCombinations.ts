@@ -2,7 +2,7 @@ export const findCombinations = (inputString: string, wordList: string[]) => {
     const results = new Set<string>();
 
     const addResult = (usedWords: string[], remainingLetters: string[]) => {
-        if (usedWords.length < 2) return; // Only add results with at least two words
+        if (usedWords.length < 2) return;
 
         results.add(
             JSON.stringify({
