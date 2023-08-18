@@ -29,6 +29,7 @@
     "flowbite": "^1.8.1",
     "flowbite-svelte": "^0.43.2",
     "svelte-french-toast": "^1.2.0",
-    "tailwind-merge": "^1.14.0"
+    "tailwind-merge": "^1.14.0",
+    "trie-prefix-tree": "^1.5.1"
   }
 }
