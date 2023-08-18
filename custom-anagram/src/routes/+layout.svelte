@@ -2,6 +2,6 @@
     import "../app.css";
 </script>
 
-<div class="bg-slate-200 p-4 h-screen flex justify-center">
+<div class="flex justify-center min-h-screen p-4 flex-0 bg-slate-200">
     <slot />
 </div>
